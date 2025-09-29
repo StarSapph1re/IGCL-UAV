@@ -39,3 +39,46 @@ Client [/yolov5_tracking] wants topic /uav1/prometheus/state to have datatype/md
 ```
 sudo lsof -i :1935
 ```
+
+## - 编译用到opencv/spirecv的功能包出现#include<opencv/...>找不到
+CMakeLists.txt 加入以下内容 
+```
+find_package(SpireCV REQUIRED)
+find_package(OpenCV 4 REQUIRED)
+
+# 链接sv_libraries
+add_executable(<name> src/<name.cpp>.cpp)
+target_link_libraries(<name> ${catkin_LIBRARIES} ${SV_LIBRARIES})
+```
+## - 在jetson平台上安装其他版本的cuda（默认11.4）
+https://developer.nvidia.com/cuda-toolkit-archive  
+依次选择linux-aarch64-jetson-native-ubuntu-20.04-local  
+按他的步骤运行
+### 多次安装时，发现文件冲突，apt-get install时出现 试图覆盖...  
+如果在安装cuda-11.8，那么需要先把之前装的删除干净
+```  
+# 删除cuda本体软件
+sudo dpkg --list | grep cuda
+# 删除lib相关依赖
+sudo dpkg --list | grep 11-8
+
+sudo apt-get check
+# 卸载完成后这list命令应该不输出任何内容，check命令也没找到未满足的依赖，才能进行下一步
+```
+
+### 卸载dpkg安装的内容
+由于依赖导致卸载不掉时，加上--force-depends，同时还要删除配置文件
+```
+sudo dpkg --remove --force-depends xxx
+sudo dpkg --purge xxx
+```
+
+
+
+## - 在jetson平台上安装pytorch环境
+https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html
+
+## - 安装xformer
+### envs/xxx/lib/python3.10/site-packages/torch/utils/cpp_extension.py, line 1786, "ValueError: Unknown CUDA arch (8.7+PTX) or GPU not supported
+打开这个报错的文件，定位到1744行  
+supported_arches = [] 这个数组里面加上对应的值 '8.7'

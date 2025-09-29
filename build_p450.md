@@ -6,13 +6,24 @@
 ## 1. 安装 `multi_map_server`
 
 ```bash
-sudo apt-get install ros-melodic-multi-map-server
+sudo apt-get install ros-noetic-multi-map-server
+sudo apt-get install ros-noetic-ddynamic-reconfigure
 ```
 
 ## 2. 安装 CUDA、cuDNN 和 TensorRT
-
+参考nvidia驱动 550.144.03
 请参考以下链接进行安装：
 [安装 CUDA, cuDNN 和 TensorRT](https://blog.csdn.net/Apple_Coco/article/details/129293019)
+
+Unbuntu20.04中，建议cuda选择run文件安装，cudnn选择直接下载archive，tensorrt下载tar包（不建议采用deb安装文件，会有诸多问题）
+TensorRT配置bashrc：
+```
+export TENSORRT_DIR=/usr/local/TensorRT-8.6.1.6
+export PATH=${TENSORRT_DIR}/bin:$PATH
+export LD_LIBRARY_PATH=${TENSORRT_DIR}/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=${TENSORRT_DIR}/lib:$LIBRARY_PATH
+export CUDNN_DIR=/usr/local/cuda
+```
 
 ## 3. 安装 OpenCV 4.7.0
 
@@ -62,6 +73,11 @@ sudo make install
 include("/home/<usrname>/lib/cmake/realsense2/realsense2Targets.cmake")
 ```
 
+如果还是报错找不到librealsense，终端中输入：
+```
+export CMAKE_PREFIX_PATH=/path/to/realsense:$CMAKE_PREFIX_PATH
+```
+
 ## 6. 安装 Miniconda
 
 ```bash
@@ -84,6 +100,10 @@ export OpenCV_DIR=/path/to/opencv-4.7.0/build
 ```bash
 sudo apt-get remove libopencv-*
 ```
+
+卸载之后因为依赖问题会把ros的一些包也卸载可以，重新用小鱼的安装器进行安装。
+
+如果出现/usr/bin/ld: 找不到 -lnvinfer，
 
 ## 8. 安装`cv_bridge`
 

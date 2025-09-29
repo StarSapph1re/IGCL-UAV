@@ -14,6 +14,11 @@ p450-px4仿真代码 Prometheus
 wget http://fishros.com/install -O fishros && . fishros
 ```
 执行以上命令，并依次选择5 2 1
+如果出现证书、数字签名无效等问题，执行以下命令
+```
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+```
+
 ### 安装ros-noetic
 ```
 wget http://fishros.com/install -O fishros && . fishros
