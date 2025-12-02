@@ -325,3 +325,60 @@ python实现的结点，运行报错：ModuleNotFoundError: No module named 'num
 import sys
 sys.path = [p for p in sys.path if not p.startswith('/usr/lib')]  # 去掉系统路径
 ```
+
+### 云台相机参数相关
+#### 分辨率修改
+在无人机上的/opt/ros/noetic/share/visbot_media/launch有不同分辨率的配置，默认启动项为visbot_media_g_4k.launch  
+要修改启动时的launch文件，找到ros_ws/bin/visquad.sh修改以下行：
+```
+roslaunch visbot_media visbot_media_g_4k.launch > $LOGCUR/visbot_meda.log 2>&1 &
+```
+
+
+### 网络通讯相关
+应用场景：自己的电脑同时连接校园网和飞机上的wifi时，ssh无法连接服务器，需要设置优先网关，首先用以下命令查看设置：
+```
+nmcli connection show
+```
+得到如下界面，复制无人机和校园网wifi的名称：
+```
+NAME                      UUID                                  TYPE      DEVICE          
+PKU                       dca818fc-8cde-47ef-8bc3-4ec0d9285392  wifi      wlx6c1ff7920b45 
+owl3_ap-5148846902c476ab  8fcfea2c-ea84-4532-becd-88f4f57ff1ec  wifi      wlo1            
+有线连接 1                 aabc5918-2ee1-38ff-a8c4-287da38f3f20  ethernet  --              
+CMCC-2038                 a9747095-bf0f-4190-9e08-504e6deb7e8a  wifi      --              
+PKU                       57476c7a-b232-4fa0-aa33-f5006ed793da  wifi      --              
+scut-student              be084a9b-89c7-4048-9c8c-49ed279800ba  wifi      --              
+Tanikaze                  3efd2ea1-2e1f-4f43-9eee-8919430d3699  wifi      --              
+TP-LINK_304               84b46763-8076-4302-b937-3ffaef9ff3dd  wifi      --              
+TP-LINK_YE                254b3f93-1d14-43a8-b93f-fd80f8a46435  wifi      --              
+@Wict-409                 f898985d-b522-4756-9f68-4daa1177708c  wifi      --              
+```
+rout-metric这个值越低，优先度越高，所以将校园网设置为50，无人机wifi设置为600，之后重启网络服务
+```
+sudo nmcli connection modify PKU ipv4.route-metric 50
+sudo nmcli connection modify owl3_ap-5148846902c476ab ipv4.route-metric 600
+sudo systemctl restart NetworkManager
+```
+
+### 真机飞行ros环境启动脚本
+在真机上，本地运行的ros结点启动前需要指定ROS_IP和ROS_MASTER_URI，自动获取本机IP的启动脚本示例如下：
+```
+#!/bin/bash
+MASTER_URI="http://192.168.2.20:11311"   # 机载电脑
+WORKSPACE="/home/hanyx/usr/owl3/ros_ws"
+
+# === 自动获取本机 IP（用hostname -I）填入变量ROS_IP =====================
+ROS_IP=$(hostname -I | awk '{print $1}')
+export ROS_IP
+
+# === 构造每一页都要执行的公共前缀 =============================
+COMMON="export ROS_MASTER_URI=$MASTER_URI; export ROS_IP=$ROS_IP; source $WORKSPACE/devel/setup.bash"
+
+# === 一键开多标签 ============================================
+gnome-terminal \
+  --tab --title="commander" -e "bash -c '${COMMON}; rosrun real owl3_commander.py; exec bash'" \
+  --tab --title="goal" -e "bash -c '${COMMON}; rosrun real owl3_goal.py; exec bash'" \
+  --tab --title="rviz"      -e "bash -c 'sleep 2; ${COMMON}; rosrun rviz rviz -d /home/hanyx/file/owl3.rviz; exec bash'" \
+  --tab --title="check_ip"  -e "bash -c 'echo ${ROS_IP}; exec bash;'"
+```
