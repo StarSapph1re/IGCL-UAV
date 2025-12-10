@@ -382,3 +382,6 @@ gnome-terminal \
   --tab --title="rviz"      -e "bash -c 'sleep 2; ${COMMON}; rosrun rviz rviz -d /home/hanyx/file/owl3.rviz; exec bash'" \
   --tab --title="check_ip"  -e "bash -c 'echo ${ROS_IP}; exec bash;'"
 ```
+
+### 关闭/打开下射激光辅助定高
+下射激光说明：飞机默认使用下射激光来辅助高度定位，也即通过判断往下反射的激光回传的时间告诉飞机自己大概在哪个位置，这个方式仅限于【在地面完全平坦，无需飞过物体】时才有使用价值。如飞机有飞过下方物体，激光反射时间变短，飞机会认为自身位置突然下降而出现明显抬升自身高度的情况，十分危险。开关方式为：启动QGC（连接飞机wifi后通过UDP连接飞控，具体方式见无人机文档），在参数中搜索config，找到设置项MAV_1_CONFIG，设置为TELEM 3表示激光定高打开，Disabled表示关闭。
