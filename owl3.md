@@ -328,10 +328,10 @@ sys.path = [p for p in sys.path if not p.startswith('/usr/lib')]  # 去掉系统
 
 ### 云台相机参数相关
 #### 分辨率修改
-在无人机上的/opt/ros/noetic/share/visbot_media/launch有不同分辨率的配置，默认启动项为visbot_media_g_4k.launch  
-要修改启动时的launch文件，找到ros_ws/bin/visquad.sh修改以下行：
+在无人机上的/opt/ros/noetic/share/visbot_media/launch/visbot_media_g_4k.launch  
+修改18行：
 ```
-roslaunch visbot_media visbot_media_g_4k.launch > $LOGCUR/visbot_meda.log 2>&1 &
+<param name="callback_res" value="1280x720">
 ```
 
 
