@@ -62,7 +62,7 @@ curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo ap
 ```
 wget http://fishros.com/install -O fishros && . fishros
 ```
-执行以上命令，并依次选择1，2，3，1.
+执行以上命令，安装noetic
 #### 3. 验证安装
 打开一个终端，输入以下命令启动ros核心。
 ```
@@ -80,10 +80,15 @@ AirSim是由微软开源的跨平台高保真仿真平台，基于Unreal Engine�
 * 逼真视觉渲染‌：利用游戏引擎实现光照、天气（雨雪雾）、动态场景等真实效果，适合视觉算法验证‌。
 * 多模态支持‌：兼容无人机（PX4/ArduPilot飞控）和车辆模式，提供传感器数据（摄像头、激光雷达、IMU等）‌。  
 注意，Airsim的仿真对显卡的渲染能力有一定需求，在RTX4080下渲染非常流畅，更低的显卡配置表现未知，**欢迎补充**。
-首先，你需要按照官方文档在Ubuntu上进行【Unreal Engine 4.27】的源代码编译。
-文档：
 
-参考这篇博客安装Airsim：
+参考这篇博客安装Unreal + Airsim：
+https://www.cnblogs.com/Xylona/p/19417779  
+里面有要求make前删掉两个参数，记得改。  
+Airsim编译:https://microsoft.github.io/AirSim/build_linux/  
+https://blog.csdn.net/weixin_27676369/article/details/160168168  
+1. sudo bash ./setup.bash
+2. sudo bash ./build.bash
+
 
 启动Unreal Engine并进入Airsim提供的测试场景Block，点击运行后，如果出现无人机，则说明安装成功。启动仿真以后，默认视角会跟随无人机移动，依次按下B和M键可以进入自由视角，此时按WASD和方向键可以控制视角在场景中自由移动。在Task x之前我们不会使用Airsim作为实验的仿真环境，但请尽早确认Airsim在你的电脑上的渲染表现，如果渲染的帧率无法接受或有明显卡顿现象，请尽早考虑自行更换或向实验室申请配置更好的设备。在此期间，你依然可以使用这台设备的环境进行学习并完成后续任务。确认仿真能稳定运行后，进入Task 4。
 

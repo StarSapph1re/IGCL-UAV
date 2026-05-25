@@ -1,3 +1,10 @@
+### 关于加密
+要完整本地仿真owl3 captain闭源部分，需要以下操作：
+1. 将90-mlock.rules放到/etc/udev/rules.d
+2. 将visbot_dog.key放到/opt/visbot_dog（保险起见 额外复制一个.visbot_dog.key，我也不知道他需要的是哪个）
+3. 原样复制厂家提供的ros_ws（闭源部分），那里面有修改过的devel/lib/captain/captain_node 以及 install/lib/captain/captain_node
+4. 运行时需要插入visbot dongle
+
 ### 将机上代码配合厂家提供的闭源部分，在本地编译成功
 1. sourcecode下gimbal controller复制到src中
 2. 硬编码修复：/home/hanyx/usr/ros_ws/devel/share/controller_msgs/cmake/controller_msgsConfig.cmake
