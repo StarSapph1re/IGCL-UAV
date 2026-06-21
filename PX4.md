@@ -9,6 +9,12 @@ save完了以后，下次启动也是这个值
 可以在/home/hanyx/usr/PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes/下找到10016_none_iris  
 ，即启动脚本，可以在里面设置启动参数，其他名称与设置同理
 
+### 用Airsim的GT pose作为视觉pose融合到EKF2时，/mavros/local_position/pose这个话题运行一会儿以后时间戳突然从ros时间跳变到FCU时间（小了好几个数量级）
+mavros内部好像会自动检测时间同步，当出现异常时好像会自己重置时间，目前的解决办法尝试：
+找到mavros启动的launch文件中对应的配置文件px4_config.yaml  
+time: timesync_mode: MAVLINK 改为 NONE  
+conn: timesync_rate: 10.0 改为 0.0
+
 ### 相关命令
 listener vehicle_visual_odometry 查看视觉里程计状况
 

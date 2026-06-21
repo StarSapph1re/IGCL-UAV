@@ -32,3 +32,6 @@ https://www.youtube.com/watch?v=Bp86WiLUC80
 ### Airsim如何关闭窗外自然光导致镜头前面有光斑
 找到场景的postprocessvolume (世界大纲视图里面 actor中找 一般搜索post)  
 镜头lens flare强度和bloom强度都设置为0.0
+
+### Airsim场景里面有类似白雾的东西 影响渲染清晰度
+检查场景是否有Exponential Height Fog，去掉
